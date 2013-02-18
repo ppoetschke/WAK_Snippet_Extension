@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+
+<html>
+<head>
+<style>
+
+body {
+	height: 300px;
+    width: 500px;
+	overflow: hidden;
+	margin: 0;
+	padding: 0;
+	
+	background-color: rgb(234, 234, 234);/* #eaeaea */
+	
+    -webkit-user-select: none;
+}
+
+#container {
+	margin: 10px;
+    padding: 10px;
+}
+
+#validation {
+	display: inline-block;
+	float: right;
+    vertical-align: bottom;
+    margin-right: 10px;
+}
+
+
+textarea {
+	width: 460px;
+	height: 100px;
+    position:absolute;
+    left: 10px;
+    top: 80px;
+}
+
+
+textarea {
+	font-family: "Courier New", Tahoma, sans-serif;
+    font-size: 11px;
+	color: rgb(61, 66, 70);
+    background: rgb(255, 255, 236);/* #3d4246 */;
+	
+}
+
+textarea:focus {
+	
+	outline: 1px solid rgb(175, 69, 0);
+}
+
+
+</style>
+
+<script LANGUAGE="JAVASCRIPT" TYPE="TEXT/JAVASCRIPT">
+
+var mySnippets = {};
+
+function init() {
+	mySnippets = studio.extension.storage.dialogArguments.snippets;
+	document.getElementById("combo").options.length=mySnippets.length;
+    for (var i=0; i<mySnippets.length; i++){
+		document.getElementById("combo").options[i].text = mySnippets[i].name;
+	}
+	
+	if(studio.extension.storage.dialogArguments.selected !=""){
+		document.getElementById('code').value = studio.extension.storage.dialogArguments.selected;	
+		document.getElementById('name').value = "<new snippet>";
+		myLength = document.getElementById("combo").options.length;
+		document.getElementById("combo").options.length = myLength+1;
+		document.getElementById("combo").options[myLength].text = "<new snippet>";
+		document.getElementById("combo").options[myLength].selected = "selected";
+		
+	}else{
+		document.getElementById('code').value = mySnippets[0].code;	
+		document.getElementById('name').value = mySnippets[0].name;
+	}
+	
+}
+
+function selectSnippet(){
+	var selected = document.getElementById("combo").selectedIndex;
+	document.getElementById('code').value = mySnippets[selected].code;
+	document.getElementById('name').value = mySnippets[selected].name;
+}
+
+function update(){
+	var selected = document.getElementById("combo").selectedIndex;
+	document.getElementById("combo").options[selected].text = document.getElementById('name').value;
+	
+	if(mySnippets.length<(selected+1)){
+		mySnippets.push({"name":"","code":""});
+	}
+	mySnippets[selected].code = document.getElementById('code').value;
+	mySnippets[selected].name = document.getElementById('name').value;
+}
+
+function insert() {
+	var myVar = {};
+	myVar.action = "insert";
+	myVar.insert = document.getElementById('code').value;
+	myVar.snippets = mySnippets;
+	
+	studio.extension.storage.returnValue = myVar;
+	
+	studio.extension.quitDialog();
+}
+
+function save() {
+	var myVar = {};
+	myVar.action = "save";
+	
+	myVar.snippets = mySnippets;
+	
+	studio.extension.storage.returnValue = myVar;
+	studio.extension.quitDialog();
+}
+
+function cancel() {
+	var myVar = {};
+	myVar.action = "cancel";
+	studio.extension.storage.returnValue = myVar;
+	studio.extension.quitDialog();
+}
+</script> 
+
+</head>
+<body style="background-repeat: no-repeat;" onload="init();">
+<div id="container" style="font-family: Arial, Verdana; font-size:12px">
+<div style="position:absolute; left: 10px; top: 20px">Snippet</div><select id="combo" name="combo" onChange="selectSnippet()" style="width: 200px; position:absolute; left: 100px; top: 20px"></select>
+<div style="position:absolute; left: 10px; top: 50px">name</div><input id="name" style="width: 200px; position:absolute; left: 100px; top: 50px"/>
+<textarea id="code"></textarea>
+<INPUT type="button" onclick="update();" value="Update" style="width: 80px; position:absolute; left: 10px; top: 200px"/>
+</div>
+<div id="validation" style="position:absolute; right: 20px; top: 260px">
+<INPUT type="button" onclick="cancel();" value="Cancel" style="width: 80px"/>
+<INPUT type="button" onclick="save();" value="OK" style="width: 80px"/>
+<INPUT type="button" onclick="insert();" value="Insert" style="width: 80px"/>
+</div>
+</body>
+</html>

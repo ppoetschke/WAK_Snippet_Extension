@@ -1,0 +1,22 @@
+{
+    "extension": 
+    {
+        "name": "CodeSnippets",
+        "version": "0.9.0",
+        "description": "Save and insert code snippets",
+        "icon": "icon.png",
+        "senders": [
+                    {
+                        "location": "studioToolbar", 
+						"actionName": "manage_snippets"
+                    }
+        ],
+        "actions": [
+                    {
+                        "name": "manage_snippets",
+                        "title": "Code Snippets"
+                    }
+        ],
+        "lifetime": "application_lifetime"
+    }
+}
